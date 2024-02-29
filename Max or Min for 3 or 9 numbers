@@ -1,0 +1,50 @@
+//In this code you can enter 3 or 9 digits to check for the maximum and minimum values in the entred digits.
+//PLEASE NOTE THAT YOU CAN ONLY USE SPACE AS SEPARATOR AND NOT COMMAS
+#include <stdio.h>
+
+void findMaxMin(int nums[], int size, int *max, int *min) {
+    *max = *min = nums[0]; // Initialize max and min with the first element
+    for (int i = 1; i < size; ++i) {
+        if (nums[i] > *max){
+            *max = nums[i];
+        }
+        if (nums[i] < *min){
+            *min = nums[i];
+        }
+    }
+}
+
+int main() {
+    int choice;
+    int max, min;
+    int actual_values = 0; // Variable to store the actual number of values entered
+
+    printf("Enter the number of values (3 or 9 expected): ");
+    scanf("%d", &choice);
+
+    if (choice != 3 && choice != 9) {
+        printf("Invalid number of values. Please enter either 3 or 9.\n");
+        return 1;
+    }
+
+    int nums[choice];
+
+    printf("Enter %d values: ", choice);
+    for (int i = 0; i < choice; ++i) {
+        scanf("%d", &nums[i]);
+        actual_values++; // Increment actual_values after each input
+    }
+
+    // Check if the actual number of values entered matches the expected number
+    if (actual_values != choice) {
+        printf("Error: You entered only %d value(s). Please enter exactly %d values.\n", actual_values, choice);
+        return 1;
+    }
+
+    findMaxMin(nums, choice, &max, &min);
+
+    printf("Maximum: %d\n", max);
+    printf("Minimum: %d\n", min);
+
+    return 0;
+}
