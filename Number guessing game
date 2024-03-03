@@ -1,0 +1,34 @@
+Sure! How about a simple guessing game in C? Here's a fun code for that:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    int number_to_guess, guess, attempts = 0;
+    srand(time(0));
+    number_to_guess = rand() % 100 + 1; // Generates a random number between 1 and 100
+
+    printf("Welcome to the Guessing Game!\n");
+    printf("I have selected a number between 1 and 100. Try to guess it!\n");
+
+    do {
+        printf("Enter your guess: ");
+        scanf("%d", &guess);
+        attempts++;
+
+        if (guess > number_to_guess) {
+            printf("Too high! Try again.\n");
+        } else if (guess < number_to_guess) {
+            printf("Too low! Try again.\n");
+        } else {
+            printf("Congratulations! You've guessed the number %d in %d attempts!\n", number_to_guess, attempts);
+        }
+    } while (guess != number_to_guess);
+
+    return 0;
+}
+```
+
+This program generates a random number between 1 and 100 and asks the user to guess it. After each guess, it provides feedback whether the guess is too high or too low. When the user guesses the correct number, it congratulates them and displays the number of attempts made.
