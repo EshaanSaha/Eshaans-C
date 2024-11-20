@@ -1,0 +1,167 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Insert a node at the start
+void insertAtStart(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        newNode->next = newNode;
+        *head = newNode;
+        return;
+    }
+    struct Node* temp = *head;
+    while (temp->next != *head) {
+        temp = temp->next;
+    }
+    newNode->next = *head;
+    temp->next = newNode;
+    *head = newNode;
+}
+
+// Insert a node at the end
+void insertAtEnd(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        newNode->next = newNode;
+        *head = newNode;
+        return;
+    }
+    struct Node* temp = *head;
+    while (temp->next != *head) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    newNode->next = *head;
+}
+
+// Insert a node in between after a specific position
+void insertInBetween(struct Node** head, int data, int position) {
+    if (*head == NULL || position == 0) {
+        insertAtStart(head, data);
+        return;
+    }
+    struct Node* newNode = createNode(data);
+    struct Node* temp = *head;
+    for (int i = 0; i < position - 1 && temp->next != *head; i++) {
+        temp = temp->next;
+    }
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+
+// Delete the starting node
+void deleteAtStart(struct Node** head) {
+    if (*head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = *head;
+    if (temp->next == *head) { // Only one node
+        free(temp);
+        *head = NULL;
+        return;
+    }
+    struct Node* last = *head;
+    while (last->next != *head) {
+        last = last->next;
+    }
+    *head = (*head)->next;
+    last->next = *head;
+    free(temp);
+}
+
+// Delete the last node
+void deleteAtEnd(struct Node** head) {
+    if (*head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = *head;
+    if (temp->next == *head) { // Only one node
+        free(temp);
+        *head = NULL;
+        return;
+    }
+    struct Node* prev = NULL;
+    while (temp->next != *head) {
+        prev = temp;
+        temp = temp->next;
+    }
+    prev->next = *head;
+    free(temp);
+}
+
+// Delete a node in between at a specific position
+void deleteInBetween(struct Node** head, int position) {
+    if (*head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    if (position == 0) {
+        deleteAtStart(head);
+        return;
+    }
+    struct Node* temp = *head;
+    struct Node* prev = NULL;
+    for (int i = 0; i < position && temp->next != *head; i++) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (temp->next == *head && prev == NULL) {
+        printf("Position out of bounds.\n");
+        return;
+    }
+    prev->next = temp->next;
+    free(temp);
+}
+
+// Display the circular linked list
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != head);
+    printf("(head)\n");
+}
+
+// Main function
+int main() {
+    struct Node* head = NULL;
+
+    insertAtEnd(&head, 10);
+    insertAtEnd(&head, 20);
+    insertAtStart(&head, 5);
+    displayList(head);
+
+    insertInBetween(&head, 15, 2);
+    displayList(head);
+
+    deleteAtStart(&head);
+    displayList(head);
+
+    deleteAtEnd(&head);
+    displayList(head);
+
+    deleteInBetween(&head, 1);
+    displayList(head);
+
+    return 0;
+}
