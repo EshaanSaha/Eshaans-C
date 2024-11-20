@@ -1,0 +1,161 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition of the node structure
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Insert a node at the start
+void insertAtStart(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head != NULL) {
+        (*head)->prev = newNode;
+    }
+    newNode->next = *head;
+    *head = newNode;
+}
+
+// Insert a node at the end
+void insertAtEnd(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+    struct Node* temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+// Insert a node in between after a specific position
+void insertInBetween(struct Node** head, int data, int position) {
+    if (*head == NULL || position == 0) {
+        insertAtStart(head, data);
+        return;
+    }
+    struct Node* temp = *head;
+    for (int i = 0; i < position - 1 && temp->next != NULL; i++) {
+        temp = temp->next;
+    }
+    struct Node* newNode = createNode(data);
+    newNode->next = temp->next;
+    if (temp->next != NULL) {
+        temp->next->prev = newNode;
+    }
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+// Delete the starting node
+void deleteAtStart(struct Node** head) {
+    if (*head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = *head;
+    *head = temp->next;
+    if (*head != NULL) {
+        (*head)->prev = NULL;
+    }
+    free(temp);
+}
+
+// Delete the last node
+void deleteAtEnd(struct Node** head) {
+    if (*head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    if (temp->prev != NULL) {
+        temp->prev->next = NULL;
+    } else {
+        *head = NULL;
+    }
+    free(temp);
+}
+
+// Delete a node in between at a specific position
+void deleteInBetween(struct Node** head, int position) {
+    if (*head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    if (position == 0) {
+        deleteAtStart(head);
+        return;
+    }
+    struct Node* temp = *head;
+    for (int i = 0; i < position && temp != NULL; i++) {
+        temp = temp->next;
+    }
+    if (temp == NULL) {
+        printf("Position out of bounds.\n");
+        return;
+    }
+    if (temp->next != NULL) {
+        temp->next->prev = temp->prev;
+    }
+    if (temp->prev != NULL) {
+        temp->prev->next = temp->next;
+    }
+    free(temp);
+}
+
+// Display the doubly linked list
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Main function
+int main() {
+    struct Node* head = NULL;
+
+    // Insert nodes
+    insertAtEnd(&head, 10);
+    insertAtEnd(&head, 20);
+    insertAtStart(&head, 5);
+    displayList(head);
+
+    insertInBetween(&head, 15, 2);
+    displayList(head);
+
+    // Delete nodes
+    deleteAtStart(&head);
+    displayList(head);
+
+    deleteAtEnd(&head);
+    displayList(head);
+
+    deleteInBetween(&head, 1);
+    displayList(head);
+
+    return 0;
+}
